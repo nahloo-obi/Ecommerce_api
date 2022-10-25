@@ -78,10 +78,16 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
+    @property
+    def image_url(self):
+        return self.image.first()
+        
+    
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='image', on_delete=models.CASCADE)
     image = models.ImageField()
-        
+    
+    
 class ProductReview(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)

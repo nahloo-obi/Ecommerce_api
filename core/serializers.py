@@ -14,6 +14,16 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = ["image"]
 
 class ProductSerializer(serializers.ModelSerializer):
+    image = ProductImageSerializer(source='image_url', read_only=True)
+    
+    class Meta:
+        model = Product
+        fields = ['id','name', 'price', 'description', 'image']
+     
+    
+   
+    
+class ProductDetailSerializer(serializers.ModelSerializer):
     gender = serializers.SerializerMethodField()
     sale_type = serializers.SerializerMethodField()
     accessory_type = serializers.SerializerMethodField()
@@ -36,7 +46,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return obj.get_colour_display()
     def get_size(self, obj):
         return obj.get_size_display()
-    
   
     
 
@@ -44,7 +53,7 @@ class ProductSerializer(serializers.ModelSerializer):
     
     
 class OrderProductSerializer(serializers.ModelSerializer):
-    product = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField() 
     final_price = serializers.SerializerMethodField()
     
     class Meta:
