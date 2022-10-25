@@ -54,32 +54,31 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     
 class OrderProductSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField() 
-    final_price = serializers.SerializerMethodField()
+    get_total_item_price = serializers.SerializerMethodField()
     
     class Meta:
         model = OrderedProduct
-        fields = ['id', 'product', 'quantity', 'final_price', ]
+        fields = ['id', 'product', 'quantity','size', 'colour', 'get_total_item_price', ]
         
-    def get_item(self, obj):
-        return ProductSerializer(obj.item).data
+    def get_product(self, obj):
+        return ProductSerializer(obj.product).data
         
-    def get_final_price(self, obj):
-        return obj.get_final_price()
+    def get_get_total_item_price(self, obj):
+        return obj.get_total_item_price()
     
     
     
    
 class OrderSerializer(serializers.ModelSerializer):
-    order_products = serializers.SerializerMethodField()
+    products = serializers.SerializerMethodField()
     total = serializers.SerializerMethodField()
-    coupon = serializers.SerializerMethodField()
     
     class Meta:
         model = Order
-        fields = ['id', 'order_products', 'total',]
+        fields = ['id', 'products', 'total',]
         
-    def get_order_products(self, obj):
-        return OrderProductSerializer(obj.items.all(), many = True).data
+    def get_products(self, obj):
+        return OrderProductSerializer(obj.products.all(), many = True).data
     
     def get_total(self,obj):
         return obj.get_total()
@@ -106,7 +105,8 @@ class AddressSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Address
-        fields = ['user','id','street_address', 'apartment_address','country', 'zip' ]
+        fields = ['id','street_address', 'apartment_address','country', 'zip' ]
+        
    
 class PaymentSerializer(serializers.Serializer):
     class Meta:
